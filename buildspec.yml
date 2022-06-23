@@ -1,0 +1,39 @@
+version: 0.2
+env:
+  secrets-manager:
+    #AWS_ACCESS_KEY_ID: ""
+    #AWS_SECRET_ACCESS_KEY: ""
+    #AWS_REGION: ""
+    USERNAME: "invincible131"
+    PASSWORD: "qwerty12345"
+    AWS_ACCOUNT_NUMBER: ""
+    REGISTRY_NAME: ""
+    CONTAINER_NAME: "quote-project-first-try"
+    #BUCKET_URI: ""
+
+phases:
+  pre_build:
+    commands:
+      - echo Docker Login
+      - docker login -u $USERNAME -p $PASSWORD
+      - echo AWS ECR Login
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/h4r6c0j5
+      #- REPOSITORY_URI=${AWS_ACCOUNT_NUMBER}.dkr.ecr.us-east-1.amazonaws.com/${REGISTRY_NAME}
+      - REPOSITORY_URI=public.ecr.aws/h4r6c0j5/quote-project
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+  build:
+    commands:
+      - echo Starting build
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+  post_build:
+    commands:
+      - Build completed
+      - echo Pushing latest Docker image
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"hello-world","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+artifacts:
+    files: imagedefinitions.json
