@@ -1,21 +1,22 @@
 version: 0.2
-env:
-  secrets-manager:
+#env:
+  #secrets-manager:
     #AWS_ACCESS_KEY_ID: ""
     #AWS_SECRET_ACCESS_KEY: ""
     #AWS_REGION: ""
-    USERNAME: "invincible131"
-    PASSWORD: "qwerty12345"
-    AWS_ACCOUNT_NUMBER: ""
-    REGISTRY_NAME: ""
-    CONTAINER_NAME: "quote-project-first-try"
+    #USERNAME: "invincible131"
+    #PASSWORD: "qwerty12345"
+    #AWS_ACCOUNT_NUMBER: ""
+    #REGISTRY_NAME: ""
+    #CONTAINER_NAME: "quote-project-first-try"
     #BUCKET_URI: ""
 
 phases:
   pre_build:
     commands:
       - echo Docker Login
-      - docker login -u $USERNAME -p $PASSWORD
+      #- docker login -u $USERNAME -p $PASSWORD
+      - docker login -u invincible131 -p qwerty12345
       - echo AWS ECR Login
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/h4r6c0j5
       #- REPOSITORY_URI=${AWS_ACCOUNT_NUMBER}.dkr.ecr.us-east-1.amazonaws.com/${REGISTRY_NAME}
