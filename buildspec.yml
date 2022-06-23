@@ -18,6 +18,7 @@ phases:
       #- docker login -u $USERNAME -p $PASSWORD
       - docker login -u invincible131 -p qwerty12345
       - echo AWS ECR Login
+      - aws --version
       - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/h4r6c0j5
       #- REPOSITORY_URI=${AWS_ACCOUNT_NUMBER}.dkr.ecr.us-east-1.amazonaws.com/${REGISTRY_NAME}
       - REPOSITORY_URI=public.ecr.aws/h4r6c0j5/quote-project
